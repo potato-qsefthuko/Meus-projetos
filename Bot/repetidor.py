@@ -37,8 +37,8 @@ async def ia(interaction: discord.Interaction, pergunta: str):
     answer = gemini_search(pergunta)
     
     if answer:
-        if len(answer) > 1950:
-            answer = answer[:1950] + "... [Resposta muito longa]"
+        if len(answer) > 5000:
+            answer = answer[:4190] + "... [Resposta muito longa]"
         await interaction.followup.send(f"### ✨ Resposta da IA\n\n{answer}")
     else:
         await interaction.followup.send("❌ Não consegui obter uma resposta agora.")
