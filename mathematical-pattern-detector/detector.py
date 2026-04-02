@@ -1,53 +1,68 @@
 def descobrir_padrao():
-    print("--Bah meia noite e eu aq fazendo desafio ;-;--")
+    print("v1.1.1")
+    print("-- Bah meia noite e eu aq fazendo desafio ;-; --\n")
     
-    # 1. O usuário digita a lista (ex: 3,7,11,15)
     entrada = input("Digite a lista: ")
     
-    # Transformamos o texto em uma lista de números inteiros
-    # O .split(',') corta o texto nas vírgulas e o int(x) transforma em número
-    lista = [int(x.strip()) for x in entrada.split(',')]
-    
-    if len(lista) < 2:
-        print("Minimo de 2 números.")
-        return
-
-    # 2. Testar se é a sequência de Quadrados Perfeitos (n²)
-    e_quadrado = True
-    for i in range(len(lista)):
-        if lista[i] != (i + 1) ** 2:
-            e_quadrado = False
-            break
-    
-    if e_quadrado:
-        print("\n Padrão detectado: Números ao Quadrado (n²)")
-        pos = int(input("Qual posição você quer descobrir? "))
-        print(f"O número na posição {pos} é: {pos**2}")
-        return
-
-    # 3. Testar se é uma Sequência Linear (pula de quanto em quanto)
-    razao = lista[1] - lista[0]
-    # Fórmula: termo = n * razao + ajuste
-    # Para achar o ajuste: ajuste = primeiro_termo - razao
-    ajuste = lista[0] - razao
-    
-    # Verificamos se a razão é a mesma na lista toda (para ter certeza)
-    eh_linear = True
-    for i in range(len(lista) - 1):
-        if lista[i+1] - lista[i] != razao:
-            eh_linear = False
-            break
-            
-    if eh_linear:
-        sinal = "+" if ajuste >= 0 else "-"
-        print(f"\n✅ Padrão detectado: Sequência Linear!")
-        print(f"Fórmula: {razao}n {sinal} {abs(ajuste)}")
+    try:
+        # Ageita o bomba da lista pra caso esteja errada.
+        lista = [int(x.strip()) for x in entrada.split(',') if x.strip()]
         
-        pos = int(input("Qual posição você quer descobrir? "))
-        resultado = (razao * pos) + ajuste
-        print(f"O número na posição {pos} é: {resultado}")
-    else:
-        print("\n❌ Padrão muito complexo! Esse o 'Sherlock' ainda não consegue ler.")
+        if len(lista) < 2:
+            print("Minimo de 2 números.")
+            return
 
-# Rodar o programa
-descobrir_padrao()
+        # 1. Vê se é quadrado perfeito (n²)
+        if all(lista[i] == (i + 1) ** 2 for i in range(len(lista))):
+            print("\n✅ Padrão detectado: Números ao Quadrado (n²)")
+            pos = int(input("Qual posição você quer descobrir? "))
+            print(f"O número na posição {pos} é: {pos**2}")
+            return
+
+        # 2. Vê se é linear
+        diffs = [lista[i+1] - lista[i] for i in range(len(lista)-1)]
+        
+        if all(d == diffs[0] for d in diffs):
+            razao = diffs[0]
+            ajuste = lista[0] - razao
+            sinal = "+" if ajuste >= 0 else "-"
+            print(f"\n✅ Padrão detectado: Sequência Linear!")
+            print(f"A fórmula é: {razao}n {sinal} {abs(ajuste)}")
+            
+            pos = int(input("Qual posição você quer descobrir? "))
+            print(f"O número na posição {pos} é: {(razao * pos) + ajuste}")
+            return
+
+        # 3. O upgrade brabo: Sequência de 2º Grau
+        if len(lista) >= 3:
+            # Aqui a gente vê a diferença da diferença, o bagulho é doido kkkkkk (coringando)
+            segunda_diff = [diffs[i+1] - diffs[i] for i in range(len(diffs)-1)]
+            
+            if all(sd == segunda_diff[0] for sd in segunda_diff):
+                print("\n✅ Padrão detectado: Sequência de 2º Grau")
+                print("Dica: Aumenta de", segunda_diff[0], "em", segunda_diff[0])
+                
+                pos_alvo = int(input("Qual posição você quer prever? "))
+                
+                # Grande atualizacão: O pc usa a formula invez de "for" 👍
+                a1 = lista[0]
+                d1 = diffs[0]
+                d2 = segunda_diff[0]
+                n = pos_alvo
+                
+                # Fórmula: a1 + (n-1)d1 + (n-1)(n-2)d2 / 2
+                resultado = a1 + (n - 1) * d1 + ((n - 1) * (n - 2) * d2) // 2
+                
+                print(f"O número na posição {pos_alvo} é: \n\n{resultado}")
+                return
+
+        print("\n❌ Padrão muito complexo! Nem o Sherlock deu conta dessa.")
+
+    except ValueError:
+        # Tecnica ante idiota.
+        print("\n❌ Somente números inteiros separados por vírgula,")
+
+# O código é meio bagunçado, mas é pra ser divertido e fácil de entender.
+# (mentira kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk)
+if __name__ == "__main__":
+    descobrir_padrao()
