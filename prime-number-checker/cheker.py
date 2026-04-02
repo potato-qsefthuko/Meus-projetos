@@ -25,3 +25,4 @@ try:
         print(f"\n\n{num} não é primo.\n\n")
 except:
     print("Por favor, digite um número inteiro válido.")
+#eu quero dormir 😭😭😭
